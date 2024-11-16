@@ -1,7 +1,7 @@
 from datetime import date, time
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from sqlalchemy import String, Text, func, DateTime, Date, Time
+from sqlalchemy import String, Text, Date, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
@@ -32,3 +32,9 @@ class Candidate(IdIntMixin, Base):
     )
 
     __mapper_args__ = {"polymorphic_identity": "candidate", "polymorphic_on": type}
+
+    @classmethod
+    def get_only_candidates(cls, session):
+        return session.query(cls).filter(
+            cls.type == cls.__mapper_args__["polymorphic_identity"]
+        )
