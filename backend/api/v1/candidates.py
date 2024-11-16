@@ -1,45 +1,73 @@
-from typing import List, Annotated
+from typing import Annotated
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.v1.models import Candidate
+from api.v1.crud import candidates as crud_candidates
+from api.v1.dependencies.candidates import candidate_by_id
+from api.v1.schemas.candidates import Candidate, CandidateCreate, CandidateUpdate
 from core import db_helper
 
 router = APIRouter(prefix="/candidates", tags=["candidates"])
 
 
-@router.get("/", response_model=list[Candidate])
+@router.get("", response_model=list[Candidate])
 async def get_candidates(
     session: Annotated[
         "AsyncSession",
         Depends(db_helper.scoped_session_dependency),
     ],
 ):
-    stmt = select(Candidate).filter(
-        Candidate.type == Candidate.__mapper_args__["polymorphic_identity"]
-    )
-    result = await session.execute(stmt)
-    return result.scalars().all()
+    return await crud_candidates.get_candidates(session)
 
 
 @router.get("/{candidate_id}")
 async def get_candidate(
-    candidate_id: int,
+    candidate: Annotated[
+        Candidate,
+        Depends(candidate_by_id),
+    ]
+):
+    return candidate
+
+
+@router.post(
+    "",
+    response_model=Candidate,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_product(
+    candidate_in: CandidateCreate,
     session: Annotated[
         "AsyncSession",
         Depends(db_helper.scoped_session_dependency),
     ],
 ):
-    stmt = select(Candidate).filter(
-        Candidate.type == Candidate.__mapper_args__["polymorphic_identity"],
-        Candidate.id == candidate_id,
+    return await crud_candidates.create_candidate(
+        session=session, candidate_in=candidate_in
     )
-    result = await session.execute(stmt)
-    return result.scalar_one_or_none()
 
 
-@router.post("/")
-async def create_candidate():
-    pass
+@router.patch("/{candidate_id}")
+async def update_candidate(
+    candidate_update: CandidateUpdate,
+    candidate: Annotated[Candidate, Depends(candidate_by_id)],
+    session: Annotated[
+        "AsyncSession",
+        Depends(db_helper.scoped_session_dependency),
+    ],
+):
+    return await crud_candidates.update_candidate(
+        session=session, candidate=candidate, candidate_update=candidate_update
+    )
+
+
+@router.delete("/{candidate_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_candidate(
+    candidate: Annotated[Candidate, Depends(candidate_by_id)],
+    session: Annotated[
+        "AsyncSession",
+        Depends(db_helper.scoped_session_dependency),
+    ],
+) -> None:
+    await crud_candidates.delete_candidate(session=session, candidate=candidate)
