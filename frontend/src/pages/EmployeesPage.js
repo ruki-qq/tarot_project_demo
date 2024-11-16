@@ -1,9 +1,21 @@
-import { Avatar, Button, Tag, Card, List, Space, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Tag,
+  Card,
+  List,
+  Space,
+  Typography,
+  Spin,
+  Alert,
+} from "antd";
 import Search from "antd/es/input/Search";
-import { employees } from "../data";
 import { useNavigate } from "react-router-dom";
 import { searchEmployee } from "../business";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getEmployees } from "../business/employee";
+import { isEmpty } from "../utils";
 
 const { Text, Title } = Typography;
 
@@ -34,25 +46,25 @@ const EmployeeCard = ({ employee, onOpen }) => {
           src={employee.avatar}
           style={{ marginRight: "20px" }}
         >
-          {employee.name[0]}
+          {employee.full_name[0]}
         </Avatar>
 
         {/* Main Content */}
         <div>
           {/* Employee Name */}
-          <Title level={4}>{employee.name}</Title>
-          <Text type="secondary">{employee.role}</Text>
+          <Title level={4}>{employee.full_name}</Title>
+          <Text type="secondary">{employee.position}</Text>
 
           {/* Description */}
           <div style={{ marginTop: "15px" }}>
-            <Text>{employee.description}</Text>
+            <Text>{employee.bio}</Text>
           </div>
 
           {/* Skills Section */}
           <div style={{ marginTop: "10px" }}>
             <Text strong>Hard Skills: </Text>
             <Space wrap>
-              {employee.hardSkills.map((skill, index) => (
+              {employee.hard_skills.split(", ").map((skill, index) => (
                 <Tag color="blue" key={index}>
                   {skill}
                 </Tag>
@@ -62,7 +74,7 @@ const EmployeeCard = ({ employee, onOpen }) => {
           <div style={{ marginTop: "10px" }}>
             <Text strong>Soft Skills: </Text>
             <Space wrap>
-              {employee.softSkills.map((skill, index) => (
+              {employee.soft_skills.split(", ").map((skill, index) => (
                 <Tag color="green" key={index}>
                   {skill}
                 </Tag>
@@ -128,6 +140,25 @@ const EmployeesCardList = ({ employees, onOpen }) => {
 
 export const EmployeesPage = () => {
   const navigate = useNavigate();
+
   const onOpen = (id) => navigate(`/employee/${id}`);
+
+  const {
+    data: employees,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["employees"],
+    queryFn: async () => getEmployees(),
+  });
+
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (isError || isEmpty(employees)) {
+    return <Alert message={"Возникла ошибка при загрузке"} type="error" />;
+  }
+
   return <EmployeesCardList employees={employees} onOpen={onOpen} />;
 };

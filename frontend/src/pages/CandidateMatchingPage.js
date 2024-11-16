@@ -2,39 +2,24 @@ import React, { useState } from "react";
 import {
   Layout,
   Typography,
-  Space,
-  List,
   Avatar,
   Progress,
   Select,
   Button,
+  Alert,
+  Spin,
 } from "antd";
 import { useQuery } from "@tanstack/react-query";
-
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { candidates, employees } from "../data";
-import { useQueryParams } from "../hooks";
 import { isEmpty } from "../utils";
+import { getCandidate } from "../business/candidate";
+import { getEmployees, getEmployee } from "../business/employee";
 
 const { Content } = Layout;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 
 const getReport = async (employee, candidate) => {
-  // axios.get(`${API_URL}/oracle/match/p2p`, {
-  //     params: {
-  //         employee,
-  //         candidate,
-  //     }
-  // })
-
-  //   scores: [
-  //     { employee: 0, score: 0.8 },
-  //     { employee: 1, score: 0.3 },
-  //     { employee: 2, score: 0.1 },
-  //   ],
-
   return {
     employee: employee.id,
     candidate: candidate.id,
@@ -46,15 +31,12 @@ const CandidateMatching = ({ candidate, employees }) => {
   const [report, setReport] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const employee = !isEmpty(selectedEmployee)
-    ? employees[selectedEmployee]
-    : null;
-
   const onEmployeeChange = (value) => {
     setSelectedEmployee(value);
   };
 
   const onDoMatch = async () => {
+    const employee = await getEmployee(selectedEmployee);
     const report = await getReport(employee, candidate);
     setReport(report);
   };
@@ -75,10 +57,9 @@ const CandidateMatching = ({ candidate, employees }) => {
         >
           <Title level={4}>Кандидат</Title>
           <Avatar size={120} src={candidate.avatar}>
-            {candidate.name[0]}
+            {candidate.full_name[0]}
           </Avatar>
-          <Title level={4}>{candidate.name}</Title>
-          <Text type="secondary">{candidate.role}</Text>
+          <Title level={4}>{candidate.full_name}</Title>
         </div>
 
         {/* Column 2: Round Progress Bar */}
@@ -100,9 +81,9 @@ const CandidateMatching = ({ candidate, employees }) => {
             placeholder="Выберите сотрудника"
             onChange={onEmployeeChange}
           >
-            {employees.map((candidate) => (
-              <Option key={candidate.id} value={candidate.id}>
-                {candidate.name}
+            {employees.map((employee) => (
+              <Option key={employee.id} value={employee.id}>
+                {employee.full_name}
               </Option>
             ))}
           </Select>
@@ -127,17 +108,34 @@ const CandidateMatching = ({ candidate, employees }) => {
 export const CandidateMatchingPage = () => {
   const { id = undefined } = useParams();
 
-  const { data: candidate = undefined } = useQuery({
-    queryKey: [id],
+  const candidateQuery = useQuery({
+    queryKey: ["candidate", id],
     queryFn: async () => {
       if (!isEmpty(id)) {
-        return candidates.find((candidate) => candidate.id === parseInt(id));
+        return getCandidate(id);
       }
     },
   });
 
-  if (isEmpty(candidate)) {
-    return <div>Fuck</div>;
+  const employeesQuery = useQuery({
+    queryKey: ["employees"],
+    queryFn: async () => getEmployees(),
+  });
+
+  const { data: candidate = undefined } = candidateQuery;
+  const { data: employees = undefined } = employeesQuery;
+
+  if (candidateQuery.isLoading || employeesQuery.isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (
+    isEmpty(candidate) ||
+    isEmpty(employees) ||
+    candidateQuery.isError ||
+    employeesQuery.isError
+  ) {
+    return <Alert message={"Возникла ошибка при загрузке"} type="error" />;
   }
 
   return <CandidateMatching candidate={candidate} employees={employees} />;

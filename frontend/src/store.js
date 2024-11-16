@@ -2,8 +2,8 @@ import { setAutoFreeze } from "immer";
 
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
-import { API_URL } from "./constants";
-import { type } from "@testing-library/user-event/dist/type";
+import { getUser, signIn, singUp } from "./business/auth";
+import { isEmpty } from "./utils";
 
 setAutoFreeze(true);
 
@@ -15,25 +15,31 @@ export const useStore = create(
     async checkState() {
       const token = localStorage.getItem("token");
 
-      if (token !== null && typeof token !== "undefined") {
-        // TODO: validate token
-        // TODO: get user
-        set((state) => {
-          state.isAuthorized = true;
-          state.user = { id: 0, name: "HR User" };
+      if (!isEmpty(token)) {
+        getUser().then((user) => {
+          set((state) => {
+            state.isAuthorized = true;
+            state.user = user;
+          });
         });
       }
     },
 
     async signIn({ login, password }) {
-      // axios.post(`${API_URL}/user/signin`, { login, password });
+      return signIn({ login, password }).then(({ access_token: token }) => {
+        localStorage.setItem("token", token);
 
-      localStorage.setItem("token", "test-token");
-
-      set((state) => {
-        state.isAuthorized = true;
-        state.user = { id: 0, name: "HR User" };
+        set((state) => {
+          state.isAuthorized = true;
+          state.user = { id: 0, name: "HR User" };
+        });
       });
+    },
+
+    async signUp({ login, password }) {
+      return singUp({ login, password }).then(() =>
+        this.signIn({ login, password })
+      );
     },
 
     async signOut() {

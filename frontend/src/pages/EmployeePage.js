@@ -1,7 +1,19 @@
 import React from "react";
 import { employees } from "../data";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Typography, Card, Tag, Space, Avatar, Divider } from "antd";
+import {
+  Button,
+  Typography,
+  Card,
+  Tag,
+  Space,
+  Avatar,
+  Divider,
+  Spin,
+} from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { getEmployee } from "../business/employee";
+import { isEmpty } from "../utils";
 
 const { Text, Title } = Typography;
 
@@ -10,9 +22,20 @@ export const EmployeePage = () => {
 
   const { id } = useParams();
 
-  const employee = employees.find((employee) => employee.id === parseInt(id));
+  const {
+    data: employee = undefined,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["employee", id],
+    queryFn: async () => getEmployee(id),
+  });
 
-  if (typeof employee === "undefined") {
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (isError || isEmpty(employee)) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
         <Title level={3}>Такого сотрудника не существует!</Title>
@@ -46,17 +69,30 @@ export const EmployeePage = () => {
         {/* Header: Avatar and Name */}
         <Space direction="vertical" align="center" style={{ width: "100%" }}>
           <Avatar size={100} src={employee.avatar}>
-            {employee.name[0]}
+            {employee.full_name[0]}
           </Avatar>
-          <Title level={4}>{employee.name}</Title>
-          <Text type="secondary">{employee.role}</Text>
+          <Title level={4}>{employee.full_name}</Title>
+          <Text type="secondary">{employee.position}</Text>
 
           {/* Description */}
           <div style={{ marginTop: "15px" }}>
-            <Text>{employee.description}</Text>
+            <Text>{employee.bio}</Text>
           </div>
         </Space>
 
+        <Divider />
+
+        <Space direction="vertical">
+          <div style={{ marginTop: "15px" }}>
+            Дата рождения: {employee.birth_date}
+          </div>
+
+          {employee.birth_time && (
+            <div style={{ marginTop: "15px" }}>
+              Время рождения: {employee.birth_time}
+            </div>
+          )}
+        </Space>
         <Divider />
 
         {/* Contact Information */}
@@ -68,7 +104,7 @@ export const EmployeePage = () => {
           <div style={{ marginTop: "10px" }}>
             <Text strong>Hard Skills: </Text>
             <Space wrap>
-              {employee.hardSkills.map((skill, index) => (
+              {employee.hard_skills.split(", ").map((skill, index) => (
                 <Tag color="blue" key={index}>
                   {skill}
                 </Tag>
@@ -78,7 +114,7 @@ export const EmployeePage = () => {
           <div style={{ marginTop: "10px" }}>
             <Text strong>Soft Skills: </Text>
             <Space wrap>
-              {employee.softSkills.map((skill, index) => (
+              {employee.soft_skills.split(", ").map((skill, index) => (
                 <Tag color="green" key={index}>
                   {skill}
                 </Tag>

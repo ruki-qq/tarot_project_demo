@@ -18,11 +18,17 @@ export const searchEmployee = (employees, search) => {
 
   return employees.filter((employee) => {
     return (
-      employee.name.toLowerCase().replaceAll(" ", "").includes(text) ||
-      employee.jobTitle.toLowerCase().replaceAll(" ", "").includes(text) ||
-      employee.skills
-        .map((x) => x.toLowerCase())
-        .join("")
+      employee.full_name.toLowerCase().replaceAll(" ", "").includes(text) ||
+      employee.bio.toLowerCase().replaceAll(" ", "").includes(text) ||
+      employee.hard_skills
+        .toLowerCase()
+        .replaceAll(" ", "")
+        .replaceAll(",", "")
+        .includes(text) ||
+      employee.soft_skills
+        .toLowerCase()
+        .replaceAll(" ", "")
+        .replaceAll(",", "")
         .includes(text)
     );
   });

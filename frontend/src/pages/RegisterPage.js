@@ -6,21 +6,16 @@ import { useStore } from "../store";
 
 const { Title } = Typography;
 
-export const Login = () => {
+export const Register = () => {
   const store = useStore();
 
   const [error, setError] = useState(undefined);
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const onSubmit = async ({ login, password }) => {
     console.log("onSubmit", { login, password });
-
-    await store
-      .signIn({ login, password })
-      .catch((error) => setError(error))
-      .then(() => navigate("/"));
+    store.signUp({ login, password }).then(() => navigate("/"));
   };
 
   return (
@@ -35,9 +30,8 @@ export const Login = () => {
       }}
     >
       <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
-        Войти в систему
+        Новый аккаунт
       </Title>
-
       {error && (
         <Alert
           message={error}
@@ -46,7 +40,6 @@ export const Login = () => {
           style={{ marginBottom: "20px" }}
         />
       )}
-
       <Form
         name="login"
         layout="vertical"
@@ -71,18 +64,16 @@ export const Login = () => {
 
         <Form.Item style={{ marginBottom: "5px" }}>
           <Button type="primary" htmlType="submit" block loading={loading}>
-            Войти
+            Создать
           </Button>
         </Form.Item>
 
         <Form.Item style={{ textAlign: "center" }}>
-          <Link to={`/signup`} style={{ fontSize: "12px" }}>
-            Нет аккаунта
+          <Link to={`/signin`} style={{ fontSize: "12px" }}>
+            Есть аккаунт
           </Link>
         </Form.Item>
       </Form>
     </Card>
   );
 };
-
-export default Login;

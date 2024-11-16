@@ -11,18 +11,23 @@ import { TeamMatchingPage } from "./pages/TeamMatchingPage";
 import { EmployeeMatchingPage } from "./pages/EmployeeMatchingPage";
 import { CandidateMatchingPage } from "./pages/CandidateMatchingPage";
 import { NewCandidatePage } from "./pages/NewCandidatePage";
+import { Register } from "./pages/RegisterPage";
 
-export const API_URL = "http://localhost:8000";
+export { API_URL } from "./api";
 
 export const routes = {
   unAuthorized: [
     {
-      path: "/login",
+      path: "/signin",
       element: <Login />,
     },
     {
+      path: "/signup",
+      element: <Register />,
+    },
+    {
       path: "*",
-      element: <Navigate to="/login" />,
+      element: <Navigate to="/signin" />,
     },
   ],
   authorized: [

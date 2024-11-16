@@ -1,9 +1,21 @@
 import React from "react";
-import { candidates } from "../data";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Typography, Card, Tag, Space, Avatar, Divider } from "antd";
-import { isEditable } from "@testing-library/user-event/dist/utils";
+import {
+  Button,
+  Typography,
+  Card,
+  Tag,
+  Space,
+  Avatar,
+  Divider,
+  DatePicker,
+  TimePicker,
+  Spin,
+} from "antd";
 import { isEmpty } from "../utils";
+import { useQuery } from "@tanstack/react-query";
+import { getCandidate } from "../business/candidate";
+import dayjs from "dayjs";
 
 const { Text, Title } = Typography;
 
@@ -12,9 +24,20 @@ export const CandidatePage = () => {
 
   const { id } = useParams();
 
-  const candidate = candidates.find((employee) => employee.id === parseInt(id));
+  const {
+    data: candidate = undefined,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["candidate", id],
+    queryFn: async () => getCandidate(id),
+  });
 
-  if (isEmpty(candidate)) {
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (isError || isEmpty(candidate)) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
         <Title level={3}>Такого кандидата не существует!</Title>
@@ -46,31 +69,40 @@ export const CandidatePage = () => {
         }}
       >
         {/* Header: Avatar and Name */}
-        <Space direction="vertical" align="center" style={{ width: "100%" }}>
+        <Space direction="vertical" align="left">
           <Avatar size={100} src={candidate.avatar}>
-            {candidate.name[0]}
+            {candidate.full_name[0]}
           </Avatar>
-          <Title level={4}>{candidate.name}</Title>
-          <Text type="secondary">{candidate.role}</Text>
+          <Title level={4}>{candidate.full_name}</Title>
 
           {/* Description */}
           <div style={{ marginTop: "15px" }}>
-            <Text>{candidate.description}</Text>
+            <Text>{candidate.bio}</Text>
           </div>
         </Space>
 
         <Divider />
 
-        {/* Contact Information */}
-        <Space
-          direction="vertical"
-          style={{ marginTop: "20px", width: "100%" }}
-        >
+        <Space direction="vertical">
+          <div style={{ marginTop: "15px" }}>
+            Дата рождения: {candidate.birth_date}
+          </div>
+
+          {candidate.birth_time && (
+            <div style={{ marginTop: "15px" }}>
+              Время рождения: {candidate.birth_time}
+            </div>
+          )}
+        </Space>
+
+        <Divider />
+
+        <Space direction="vertical">
           {/* Skills Section */}
           <div style={{ marginTop: "10px" }}>
             <Text strong>Hard Skills: </Text>
             <Space wrap>
-              {candidate.hardSkills.map((skill, index) => (
+              {candidate.hard_skills.split(", ").map((skill, index) => (
                 <Tag color="blue" key={index}>
                   {skill}
                 </Tag>
@@ -80,7 +112,7 @@ export const CandidatePage = () => {
           <div style={{ marginTop: "10px" }}>
             <Text strong>Soft Skills: </Text>
             <Space wrap>
-              {candidate.softSkills.map((skill, index) => (
+              {candidate.soft_skills.split(", ").map((skill, index) => (
                 <Tag color="green" key={index}>
                   {skill}
                 </Tag>
