@@ -3,9 +3,14 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AccessTokenSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
     lifetime_seconds: int = 604800  # week
-    reset_password_token_secret: str = "SECRET"
-    verification_token_secret: str = "SECRET"
+    reset_password_token_secret: str
+    verification_token_secret: str
 
 
 class EnvVars(BaseModel):
@@ -17,7 +22,11 @@ class EnvVars(BaseModel):
 
 
 class DBSettings(EnvVars, BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
 
     @property
     def db_url(self) -> str:
@@ -32,6 +41,7 @@ class DBSettings(EnvVars, BaseSettings):
 class Settings(DBSettings):
     api_prefix: str = "/api/v1"
     auth_prefix: str = "/auth"
+    users_prefix: str = "/users"
     access_token_settings: AccessTokenSettings = AccessTokenSettings()
 
 
