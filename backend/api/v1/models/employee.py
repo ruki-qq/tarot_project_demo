@@ -13,10 +13,6 @@ if TYPE_CHECKING:
 
 
 class Employee(Candidate):
-    __table_args__ = {
-        "exclude_columns": ["is_favoured"],
-    }
-
     id: Mapped[int] = mapped_column(
         ForeignKey("candidates.id"),
         primary_key=True,
