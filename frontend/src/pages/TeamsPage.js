@@ -2,6 +2,9 @@ import { Avatar, Button, Card, List, Space, Typography } from "antd";
 import React from "react";
 import { teams } from "../data";
 import { useNavigate } from "react-router-dom";
+import { searchTeam } from "../business";
+import { useState } from "react";
+import Search from "antd/es/input/Search";
 
 const { Text, Title } = Typography;
 
@@ -65,11 +68,42 @@ const TeamCard = ({ team, onOpen }) => {
 };
 
 const TeamCardList = ({ teams, onOpen }) => {
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState();
+
+  const onSearch = (text) => {
+    setSearch(text);
+  };
+
+  const onCreateClick = () => {
+    navigate(`/teams/new`);
+  };
+
+  const filtered = search ? searchTeam(teams, search) : teams;
+
   return (
-    <div style={{ padding: "20px", background: "#f0f2f5" }}>
+    <div
+      style={{
+        padding: "20px",
+        background: "#f0f2f5",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Space style={{ marginBottom: "20px" }}>
+        <Button type="primary" onClick={onCreateClick}>
+          Добавить
+        </Button>
+      </Space>
+
+      <Space style={{ marginBottom: "20px" }}>
+        <Search style={{ width: "100%" }} onSearch={onSearch} />
+      </Space>
+
       <List
         itemLayout="vertical"
-        dataSource={teams}
+        dataSource={filtered}
         renderItem={(team) => (
           <TeamCard key={team.id} team={team} onOpen={onOpen} />
         )}

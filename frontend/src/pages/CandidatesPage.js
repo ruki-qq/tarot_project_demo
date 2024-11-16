@@ -3,6 +3,7 @@ import { candidates } from "../data";
 import { useNavigate } from "react-router-dom";
 import Search from "antd/es/input/Search";
 import { useState } from "react";
+import { searchCandidate } from "../business";
 
 const { Text, Title } = Typography;
 
@@ -93,20 +94,7 @@ const CandidatesCardList = ({ candidates, onOpen, onCreate }) => {
     navigate(`/candidates/new`);
   };
 
-  const filtered = search
-    ? candidates.filter((candidate) => {
-        const text = search.toLowerCase().replaceAll(" ", "");
-
-        return (
-          candidate.name.toLowerCase().replaceAll(" ", "").includes(text) ||
-          candidate.jobTitle.toLowerCase().replaceAll(" ", "").includes(text) ||
-          candidate.skills
-            .map((x) => x.toLowerCase())
-            .join("")
-            .includes(text)
-        );
-      })
-    : candidates;
+  const filtered = search ? searchCandidate(candidates, search) : candidates;
 
   return (
     <div
@@ -119,7 +107,7 @@ const CandidatesCardList = ({ candidates, onOpen, onCreate }) => {
     >
       <Space style={{ marginBottom: "20px" }}>
         <Button type="primary" onClick={onCreateClick}>
-          Новый кандидат
+          Добавить
         </Button>
       </Space>
 

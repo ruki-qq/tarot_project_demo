@@ -10,6 +10,7 @@ import { TeamPage } from "./pages/TeamPage";
 import { TeamMatchingPage } from "./pages/TeamMatchingPage";
 import { EmployeeMatchingPage } from "./pages/EmployeeMatchingPage";
 import { CandidateMatchingPage } from "./pages/CandidateMatchingPage";
+import { NewCandidatePage } from "./pages/NewCandidatePage";
 
 export const API_URL = "http://localhost:8000";
 
@@ -50,9 +51,13 @@ export const routes = {
       element: <EmployeeMatchingPage />,
     },
     {
-        path: "/candidate-matching/:id",
-        element: <CandidateMatchingPage />,
-      },
+      path: "/candidate-matching/:id",
+      element: <CandidateMatchingPage />,
+    },
+    {
+      path: "/candidates/new",
+      element: <NewCandidatePage />,
+    },
     {
       path: "/candidates",
       element: <CandidatesPage />,

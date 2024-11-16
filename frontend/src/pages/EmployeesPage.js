@@ -1,6 +1,9 @@
 import { Avatar, Button, Tag, Card, List, Space, Typography } from "antd";
+import Search from "antd/es/input/Search";
 import { employees } from "../data";
 import { useNavigate } from "react-router-dom";
+import { searchEmployee } from "../business";
+import { useState } from "react";
 
 const { Text, Title } = Typography;
 
@@ -45,8 +48,6 @@ const EmployeeCard = ({ employee, onOpen }) => {
             <Text>{employee.description}</Text>
           </div>
 
-
-
           {/* Skills Section */}
           <div style={{ marginTop: "10px" }}>
             <Text strong>Hard Skills: </Text>
@@ -81,11 +82,42 @@ const EmployeeCard = ({ employee, onOpen }) => {
 };
 
 const EmployeesCardList = ({ employees, onOpen }) => {
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState();
+
+  const onSearch = (text) => {
+    setSearch(text);
+  };
+
+  const onCreateClick = () => {
+    navigate(`/employees/new`);
+  };
+
+  const filtered = search ? searchEmployee(employees, search) : employees;
+
   return (
-    <div style={{ padding: "20px", background: "#f0f2f5" }}>
+    <div
+      style={{
+        padding: "20px",
+        background: "#f0f2f5",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Space style={{ marginBottom: "20px" }}>
+        <Button type="primary" onClick={onCreateClick}>
+          Добавить
+        </Button>
+      </Space>
+
+      <Space style={{ marginBottom: "20px" }}>
+        <Search style={{ width: "100%" }} onSearch={onSearch} />
+      </Space>
+
       <List
         itemLayout="vertical"
-        dataSource={employees}
+        dataSource={filtered}
         renderItem={(employee) => (
           <EmployeeCard key={employee.id} employee={employee} onOpen={onOpen} />
         )}
