@@ -30,8 +30,8 @@ export const TeamPage = () => {
 
   const onSearch = () => {
     navigate({
-      pathname: "/oracle",
-      search: `${createSearchParams({ team: team.id })}`,
+      pathname: `/team-matching/${team.id}`,
+      //   search: `${createSearchParams({ team: })}`,
     });
   };
 

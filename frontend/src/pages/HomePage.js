@@ -1,9 +1,10 @@
 import react from "react";
 import Candidate from "../components/Candidate";
-import { candidates } from "../data";
+import { candidates, teams } from "../data";
+import { TeamMatchingPage } from "./TeamMatchingPage";
 
 export const HomePage = () => {
-  return "Home";
-};
+  const team = teams[0];
 
-export default HomePage;
+  return <TeamMatchingPage team={team} candidates={candidates} />;
+};

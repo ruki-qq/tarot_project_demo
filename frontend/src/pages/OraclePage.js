@@ -1,13 +1,22 @@
-import react from "react";
-import { useSearchParams } from "react-router-dom";
+import react, { useState } from "react";
+import { teams } from "../data";
+import { Space, Typography } from "antd";
+import { useQueryParams } from "../hooks";
+
+const { Text } = Typography;
 
 export const OraclePage = () => {
-  const query = new URLSearchParams(window.location.search);
+  const query = useQueryParams();
 
-  console.log({ query: [...query.entries()] });
+  const [candidate, setCandidate] = useState();
 
-  const [searchParams, setSearhParams] = useSearchParams(query);
+  const team = teams.find((team) => team.id === parseInt(team.id));
 
-  console.log({ searchParams });
-  return JSON.stringify(searchParams.team, null, 2);
+  return (
+    <Space>
+      <Space>
+        <Text>Команда</Text>
+      </Space>
+    </Space>
+  );
 };

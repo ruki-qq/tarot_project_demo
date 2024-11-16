@@ -6,7 +6,7 @@ import { EmployeesPage } from "./pages/EmployeesPage";
 import { EmployeePage } from "./pages/EmployeePage";
 import { TeamsPage } from "./pages/TeamsPage";
 import { TeamPage } from "./pages/TeamPage";
-import { OraclePage } from "./pages/OraclePage";
+import { TeamMatchingPage } from "./pages/TeamMatchingPage";
 
 export const API_URL = "http://localhost:8000";
 
@@ -35,8 +35,8 @@ export const routes = {
       element: <EmployeePage />,
     },
     {
-      path: "/oracle",
-      element: <OraclePage />,
+      path: "/team-matching/:id",
+      element: <TeamMatchingPage />,
     },
     {
       path: "/candidates",

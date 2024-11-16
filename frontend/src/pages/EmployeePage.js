@@ -30,9 +30,9 @@ export const EmployeePage = () => {
         <Button onClick={() => navigate(-1)}>Назад</Button>
         <Button
           type="primary"
-          onClick={() => navigate(`/fortune/user/${employee.id}`)}
+          onClick={() => navigate(`/employee-matching/${employee.id}`)}
         >
-          🔮
+          🔮 Сравнить
         </Button>
       </Space>
 
