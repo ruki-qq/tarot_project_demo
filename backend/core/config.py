@@ -31,6 +31,7 @@ class DBSettings(EnvVars, BaseSettings):
 
 class Settings(DBSettings):
     api_prefix: str = "/api/v1"
+    auth_prefix: str = "/auth"
     access_token_settings: AccessTokenSettings = AccessTokenSettings()
 
 
