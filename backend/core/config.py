@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AccessTokenSettings(BaseSettings):
-    lifetime_seconds: int = 3600
+    lifetime_seconds: int = 604800  # week
     reset_password_token_secret: str = "SECRET"
     verification_token_secret: str = "SECRET"
 
