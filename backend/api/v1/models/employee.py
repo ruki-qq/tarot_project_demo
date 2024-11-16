@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Date, String
+from sqlalchemy import Date, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -16,6 +16,11 @@ class Employee(Candidate):
     __table_args__ = {
         "exclude_columns": ["is_favoured"],
     }
+
+    id: Mapped[int] = mapped_column(
+        ForeignKey("candidates.id"),
+        primary_key=True,
+    )
 
     position: Mapped[str] = mapped_column(String(128))
     department: Mapped[str] = mapped_column(String(128))
