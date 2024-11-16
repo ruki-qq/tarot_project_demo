@@ -14,7 +14,6 @@ pydantic-settings = "^2.6.1"
 alembic = "^1.14.0"
 pydantic = {extras = ["email"], version = "^2.9.2"}
 sqladmin = "^0.20.1"
-passlib = "^1.7.4"
 fastapi-users = {extras = ["sqlalchemy"], version = "^14.0.0"}
 
 
