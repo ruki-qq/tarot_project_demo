@@ -21,5 +21,5 @@ async def candidate_by_id(
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Product {candidate_id} not found!",
+        detail=f"Candidate {candidate_id} not found!",
     )
