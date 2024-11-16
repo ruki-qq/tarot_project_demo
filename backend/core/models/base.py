@@ -7,5 +7,3 @@ class Base(DeclarativeBase):
     @declared_attr.directive
     def __tablename__(self) -> str:
         return f"{self.__name__.lower()}s"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
