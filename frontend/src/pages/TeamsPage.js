@@ -26,7 +26,7 @@ const TeamCard = ({ team, onOpen }) => {
           <Title level={4} style={{ margin: 0 }}>
             {team.name}
           </Title>
-          <Text type="secondary">{team.members.length} Members</Text>
+          <Text type="secondary">Размер команды: {team.members.length}</Text>
         </div>
 
         {/* Description */}
@@ -57,7 +57,7 @@ const TeamCard = ({ team, onOpen }) => {
           onClick={() => onOpen(team.id)}
           style={{ marginTop: "10px" }}
         >
-          Open
+          Подробнее
         </Button>
       </Space>
     </Card>

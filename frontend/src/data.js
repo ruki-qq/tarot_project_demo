@@ -67,6 +67,8 @@ export const candidates = [
   id: i,
   ...candidate,
   name: `${candidate.name} ${i}`,
+  hardSkills: [...candidate.skills],
+  softSkills: [...candidate.skills],
   birth: "2000-01-01",
 }));
 
@@ -138,6 +140,10 @@ export const employees = [
 ].map((candidate, i) => ({
   id: i,
   ...candidate,
+  hardSkills: [...candidate.skills],
+  softSkills: [...candidate.skills],
+  description: `Описание сотрудника ${i} написанное HR`,
+  role: ['Developer', 'UI/UX', 'PM', "CTO", "CEO"][Math.round(Math.random() * 4)],
   name: `${candidate.name} ${i}`,
   birth: "2000-01-01",
 }));

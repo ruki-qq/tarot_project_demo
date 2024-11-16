@@ -18,7 +18,14 @@ export const TeamPage = () => {
   const team = teams.find((team) => team.id === parseInt(id));
 
   if (typeof team === "undefined") {
-    return <div>Такой команды не существует</div>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <Title level={3}>Такой команды не существует!</Title>
+        <Button type="primary" onClick={() => navigate(-1)}>
+          Назад
+        </Button>
+      </div>
+    );
   }
 
   const onSearch = () => {
@@ -34,9 +41,8 @@ export const TeamPage = () => {
       <Space style={{ marginBottom: "20px" }}>
         <Button onClick={() => navigate(-1)}>Назад</Button>
         <Button type="primary" onClick={onSearch}>
-          Подобрать сотрудника
+          🔮 Подобрать сотрудника
         </Button>
-        {/* <Button type="danger">Удалить команду</Button> */}
       </Space>
 
       {/* Team Details */}

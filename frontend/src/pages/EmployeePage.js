@@ -1,7 +1,7 @@
 import React from "react";
 import { employees } from "../data";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Typography, Card, Space, Avatar, Divider } from "antd";
+import { Button, Typography, Card, Tag, Space, Avatar, Divider } from "antd";
 
 const { Text, Title } = Typography;
 
@@ -23,23 +23,18 @@ export const EmployeePage = () => {
     );
   }
 
-  if (!employee) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
-        <Title level={3}>Employee not found!</Title>
-        <Button type="primary" onClick={() => navigate(-1)}>
-          Go Back
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      {/* Back Button */}
-      <Button style={{ marginBottom: "20px" }} onClick={() => navigate(-1)}>
-        Назад
-      </Button>
+      {/* Buttons */}
+      <Space style={{ marginBottom: "20px" }}>
+        <Button onClick={() => navigate(-1)}>Назад</Button>
+        <Button
+          type="primary"
+          onClick={() => navigate(`/fortune/user/${employee.id}`)}
+        >
+          🔮
+        </Button>
+      </Space>
 
       {/* Employee Detail Card */}
       <Card
@@ -55,6 +50,11 @@ export const EmployeePage = () => {
           </Avatar>
           <Title level={4}>{employee.name}</Title>
           <Text type="secondary">{employee.role}</Text>
+
+          {/* Description */}
+          <div style={{ marginTop: "15px" }}>
+            <Text>{employee.description}</Text>
+          </div>
         </Space>
 
         <Divider />
@@ -64,21 +64,28 @@ export const EmployeePage = () => {
           direction="vertical"
           style={{ marginTop: "20px", width: "100%" }}
         >
-          <div>
-            <Text strong>Email:</Text> <Text>{employee.email}</Text>
+          {/* Skills Section */}
+          <div style={{ marginTop: "10px" }}>
+            <Text strong>Hard Skills: </Text>
+            <Space wrap>
+              {employee.hardSkills.map((skill, index) => (
+                <Tag color="blue" key={index}>
+                  {skill}
+                </Tag>
+              ))}
+            </Space>
           </div>
-          <div>
-            <Text strong>Phone:</Text> <Text>{employee.phone}</Text>
+          <div style={{ marginTop: "10px" }}>
+            <Text strong>Soft Skills: </Text>
+            <Space wrap>
+              {employee.softSkills.map((skill, index) => (
+                <Tag color="green" key={index}>
+                  {skill}
+                </Tag>
+              ))}
+            </Space>
           </div>
         </Space>
-
-        <Divider />
-
-        {/* Bio */}
-        <div style={{ marginTop: "20px" }}>
-          <Title level={5}>Bio</Title>
-          <Text>{employee.bio}</Text>
-        </div>
       </Card>
     </div>
   );
