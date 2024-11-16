@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends
 
-from core.db_helper import db_helper
+from core import db_helper
 from users.models import User
 
 if TYPE_CHECKING:
