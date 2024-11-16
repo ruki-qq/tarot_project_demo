@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AccessTokenSettings(BaseSettings):
     lifetime_seconds: int = 3600
+    reset_password_token_secret: str = "SECRET"
+    verification_token_secret: str = "SECRET"
 
 
 class EnvVars(BaseModel):
