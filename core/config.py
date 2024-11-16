@@ -2,6 +2,10 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+class AccessTokenSettings(BaseSettings):
+    lifetime_seconds: int = 3600
+
+
 class EnvVars(BaseModel):
     db_user: str
     db_pass: str
@@ -25,6 +29,7 @@ class DBSettings(EnvVars, BaseSettings):
 
 class Settings(DBSettings):
     api_prefix: str = "/api/v1"
+    access_token_settings: AccessTokenSettings = AccessTokenSettings()
 
 
 settings = Settings()
