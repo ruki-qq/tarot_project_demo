@@ -14,6 +14,7 @@ class EmployeeBase(BaseModel):
     bio: str | None
     position: Annotated[str, MinLen(1), MaxLen(128)]
     department: Annotated[str, MinLen(1), MaxLen(128)]
+    hire_date: date
 
 
 class EmployeeCreate(EmployeeBase):
@@ -34,4 +35,3 @@ class Employee(EmployeeBase):
 
     id: PositiveInt
     is_favoured: bool
-    hire_date: date
