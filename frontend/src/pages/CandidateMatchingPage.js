@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { candidates, employees, teams } from "../data";
+import { candidates, employees } from "../data";
 import { useQueryParams } from "../hooks";
 import { isEmpty } from "../utils";
 
@@ -42,22 +42,16 @@ const getReport = async (employee, candidate) => {
   };
 };
 
-const calculateTeamScore = (report) => {
-  const totalScore = Object.values(report).reduce((acc, x) => acc + x.score, 0);
-  const count = Object.keys(report).length;
-  const averageScore = totalScore / count;
-  return Math.round(100 * averageScore);
-};
-
-const EmployeeMatching = ({ employee, candidates }) => {
+const CandidateMatching = ({ candidate, employees }) => {
   const [report, setReport] = useState(null);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const candidate =
-    selectedCandidate !== null ? candidates[selectedCandidate] : null;
+  const employee = !isEmpty(selectedEmployee)
+    ? employees[selectedEmployee]
+    : null;
 
-  const onCandidateChange = (value) => {
-    setSelectedCandidate(value);
+  const onEmployeeChange = (value) => {
+    setSelectedEmployee(value);
   };
 
   const onDoMatch = async () => {
@@ -79,12 +73,12 @@ const EmployeeMatching = ({ employee, candidates }) => {
             alignItems: "center",
           }}
         >
-          <Title level={4}>Сотрудник</Title>
-          <Avatar size={120} src={employee.avatar}>
-            {employee.name[0]}
+          <Title level={4}>Кандидат</Title>
+          <Avatar size={120} src={candidate.avatar}>
+            {candidate.name[0]}
           </Avatar>
-          <Title level={4}>{employee.name}</Title>
-          <Text type="secondary">{employee.role}</Text>
+          <Title level={4}>{candidate.name}</Title>
+          <Text type="secondary">{candidate.role}</Text>
         </div>
 
         {/* Column 2: Round Progress Bar */}
@@ -100,13 +94,13 @@ const EmployeeMatching = ({ employee, candidates }) => {
 
         {/* Column 3: Candidate Selection */}
         <div style={{ flex: 1 }}>
-          <Title level={4}>Кандидат</Title>
+          <Title level={4}>Сотрудник</Title>
           <Select
             style={{ width: "100%" }}
-            placeholder="Выберите кандидата"
-            onChange={onCandidateChange}
+            placeholder="Выберите сотрудника"
+            onChange={onEmployeeChange}
           >
-            {candidates.map((candidate) => (
+            {employees.map((candidate) => (
               <Option key={candidate.id} value={candidate.id}>
                 {candidate.name}
               </Option>
@@ -121,7 +115,7 @@ const EmployeeMatching = ({ employee, candidates }) => {
           type="primary"
           size="large"
           onClick={onDoMatch}
-          disabled={selectedCandidate === null}
+          disabled={selectedEmployee === null}
         >
           🔮 Оценить
         </Button>
@@ -130,21 +124,21 @@ const EmployeeMatching = ({ employee, candidates }) => {
   );
 };
 
-export const EmployeeMatchingPage = () => {
+export const CandidateMatchingPage = () => {
   const { id = undefined } = useParams();
 
-  const { data: employee = undefined } = useQuery({
+  const { data: candidate = undefined } = useQuery({
     queryKey: [id],
     queryFn: async () => {
       if (!isEmpty(id)) {
-        return employees.find((employee) => employee.id === parseInt(id));
+        return candidates.find((candidate) => candidate.id === parseInt(id));
       }
     },
   });
 
-  if (isEmpty(employee)) {
+  if (isEmpty(candidate)) {
     return <div>Fuck</div>;
   }
 
-  return <EmployeeMatching employee={employee} candidates={candidates} />;
+  return <CandidateMatching candidate={candidate} employees={employees} />;
 };

@@ -143,7 +143,9 @@ export const employees = [
   hardSkills: [...candidate.skills],
   softSkills: [...candidate.skills],
   description: `Описание сотрудника ${i} написанное HR`,
-  role: ['Developer', 'UI/UX', 'PM', "CTO", "CEO"][Math.round(Math.random() * 4)],
+  role: ["Developer", "UI/UX", "PM", "CTO", "CEO"][
+    Math.round(Math.random() * 4)
+  ],
   name: `${candidate.name} ${i}`,
   birth: "2000-01-01",
 }));

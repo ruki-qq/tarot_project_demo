@@ -7,6 +7,7 @@ import {
   createSearchParams,
 } from "react-router-dom";
 import { Button, Typography, Card, Space, Avatar, Divider } from "antd";
+import { isEmpty } from "../utils";
 
 const { Text, Title } = Typography;
 
@@ -17,7 +18,7 @@ export const TeamPage = () => {
 
   const team = teams.find((team) => team.id === parseInt(id));
 
-  if (typeof team === "undefined") {
+  if (isEmpty(team)) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
         <Title level={3}>Такой команды не существует!</Title>

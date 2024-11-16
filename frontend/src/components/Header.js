@@ -36,9 +36,9 @@ export const Header = () => {
       <Menu.Item>
         <Link to="/candidates">Кандидаты</Link>
       </Menu.Item>
-      <Menu.Item>
+      {/* <Menu.Item>
         <Link to="/oracle">🪄 Оракул</Link>
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   );
 
