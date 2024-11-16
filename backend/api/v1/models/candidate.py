@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
 
 class Candidate(IdIntMixin, Base):
+    type: Mapped[str] = mapped_column(String(50))
+
     full_name: Mapped[str] = Mapped[String(256)]
 
     birth_date: Mapped[date] = mapped_column(Date)
