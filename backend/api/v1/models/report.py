@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 class Report(IdIntMixin, Base):
-    compatibility_score: float  # 0-100
+    compatibility_score: Mapped[float]
     tarot_reading: Mapped[str] = mapped_column(Text)
     created_at: Mapped["datetime"]
 
