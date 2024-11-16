@@ -7,8 +7,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.models import Base
 from core.models.mixins import IdIntMixin
 
-from .report_candidate_association import report_candidate_association_table
-
 
 if TYPE_CHECKING:
     from .report import Report
@@ -30,8 +28,6 @@ class Candidate(IdIntMixin, Base):
         server_default=false(),
     )
 
-    reports: Mapped[list["Report"]] = relationship(
-        secondary=report_candidate_association_table, back_populates="candidates"
-    )
+    reports: Mapped[list["Report"]] = relationship(back_populates="candidate")
 
     __mapper_args__ = {"polymorphic_identity": "candidate", "polymorphic_on": type}
