@@ -1,26 +1,31 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import String, Text, func, DateTime
+from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from core.models.mixins import IdIntMixin
 
-from .report_person_association import report_person_association_table
+from .report_candidate_association import report_candidate_association_table
+from .report_employee_association import report_employee_association_table
 
 if TYPE_CHECKING:
-    from .person import Person
+    from .candidate import Candidate
+    from .employee import Employee
+    from datetime import datetime
 
 
-class Report(Base):
-    person1_id: int
-    person2_id: int
+class Report(IdIntMixin, Base):
     compatibility_score: float  # 0-100
-    tarot_reading: dict
-    astro_compatibility: dict
-    created_at: datetime
-    created_by: int
+    tarot_reading: Mapped[str] = mapped_column(Text)
+    created_at: Mapped["datetime"]
 
-    persons: Mapped[list["Person"]] = relationship(
-        secondary=report_person_association_table, back_populates="reports"
+    candidates: Mapped[list["Candidate"]] = relationship(
+        secondary=report_candidate_association_table,
+        back_populates="reports",
+    )
+    employees: Mapped[list["Employee"]] = relationship(
+        secondary=report_employee_association_table,
+        back_populates="reports",
     )
