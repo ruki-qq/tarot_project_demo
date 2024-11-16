@@ -12,3 +12,4 @@ fastapi_users = FastAPIUsers[User, UserIdType](
 )
 
 current_user = fastapi_users.current_user(active=True)
+# 1
