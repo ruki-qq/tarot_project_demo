@@ -6,20 +6,31 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./store";
+import { ConfigProvider } from "antd";
 
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const theme = {
+  token: {
+    colorPrimary: "#f25430",
+    colorInfo: "#f25430",
+    // "colorSuccess": "#52c41a"
+  },
+
+};
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <StoreProvider>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </StoreProvider>
-    </BrowserRouter>
+    <ConfigProvider theme={theme}>
+      <BrowserRouter>
+        <StoreProvider>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </StoreProvider>
+      </BrowserRouter>
+    </ConfigProvider>
   </React.StrictMode>
 );
 

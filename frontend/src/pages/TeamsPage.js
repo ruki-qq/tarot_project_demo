@@ -38,14 +38,7 @@ const TeamCard = ({ team, onOpen }) => {
         {/* Member Avatars */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           {team.members.slice(0, 5).map((member, index) => (
-            <Avatar
-              key={index}
-              src={member.avatar}
-              size="small"
-              style={{
-                backgroundColor: "#87d068",
-              }}
-            >
+            <Avatar key={index} src={member.avatar} size="small">
               {member.name[0]}
             </Avatar>
           ))}
@@ -86,7 +79,6 @@ const TeamCardList = ({ teams, onOpen }) => {
     <div
       style={{
         padding: "20px",
-        background: "#f0f2f5",
         display: "flex",
         flexDirection: "column",
       }}

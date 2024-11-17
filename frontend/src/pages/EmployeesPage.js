@@ -112,7 +112,6 @@ const EmployeesCardList = ({ employees, onOpen }) => {
     <div
       style={{
         padding: "20px",
-        background: "#f0f2f5",
         display: "flex",
         flexDirection: "column",
       }}
