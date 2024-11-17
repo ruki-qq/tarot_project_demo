@@ -1,5 +1,4 @@
 import React from "react";
-import { employees } from "../data";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,

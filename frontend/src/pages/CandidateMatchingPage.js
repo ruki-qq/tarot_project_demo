@@ -14,94 +14,101 @@ import { useParams } from "react-router-dom";
 import { isEmpty } from "../utils";
 import { getCandidate } from "../business/candidate";
 import { getEmployees, getEmployee } from "../business/employee";
+import { getOrCreateReport } from "../business/report";
 
 const { Content } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
-
-const getReport = async (employee, candidate) => {
-  return {
-    employee: employee.id,
-    candidate: candidate.id,
-    score: Math.random(),
-  };
-};
 
 const CandidateMatching = ({ candidate, employees }) => {
   const [report, setReport] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onEmployeeChange = (value) => {
+    setReport(null);
     setSelectedEmployee(value);
   };
 
   const onDoMatch = async () => {
+    setIsLoading(true);
     const employee = await getEmployee(selectedEmployee);
-    const report = await getReport(employee, candidate);
+    const report = await getOrCreateReport({ employee, candidate });
     setReport(report);
+    setIsLoading(false);
   };
 
   const score = report ? Math.round(100 * report.score) : 0;
 
   return (
-    <Layout style={{ padding: "20px" }}>
-      <Content style={{ display: "flex", gap: "20px" }}>
-        {/* Single User Large Card */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Title level={4}>Кандидат</Title>
-          <Avatar size={120} src={candidate.avatar}>
-            {candidate.full_name[0]}
-          </Avatar>
-          <Title level={4}>{candidate.full_name}</Title>
-        </div>
-
-        {/* Column 2: Round Progress Bar */}
-        <div style={{ flex: 1, textAlign: "center" }}>
-          <Title level={4}>Совпадение</Title>
-          <Progress
-            type="circle"
-            percent={score}
-            width={120}
-            strokeColor="#1890ff"
-          />
-        </div>
-
-        {/* Column 3: Candidate Selection */}
-        <div style={{ flex: 1 }}>
-          <Title level={4}>Сотрудник</Title>
-          <Select
-            style={{ width: "100%" }}
-            placeholder="Выберите сотрудника"
-            onChange={onEmployeeChange}
+    <>
+      {isLoading && <Spin fullscreen />}
+      <Layout style={{ padding: "20px" }}>
+        <Content style={{ display: "flex", gap: "20px" }}>
+          {/* Single User Large Card */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            {employees.map((employee) => (
-              <Option key={employee.id} value={employee.id}>
-                {employee.full_name}
-              </Option>
-            ))}
-          </Select>
-        </div>
-      </Content>
+            <Title level={4}>Кандидат</Title>
+            <Avatar size={120} src={candidate.avatar}>
+              {candidate.full_name[0]}
+            </Avatar>
+            <Title level={4}>{candidate.full_name}</Title>
+          </div>
 
-      {/* Trigger Button */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <Button
-          type="primary"
-          size="large"
-          onClick={onDoMatch}
-          disabled={selectedEmployee === null}
-        >
-          🔮 Оценить
-        </Button>
-      </div>
-    </Layout>
+          {/* Column 2: Round Progress Bar */}
+          <div style={{ flex: 1, textAlign: "center" }}>
+            <Title level={4}>Совпадение</Title>
+            <Progress
+              type="circle"
+              percent={score}
+              width={120}
+              strokeColor="#1890ff"
+            />
+          </div>
+
+          {/* Column 3: Candidate Selection */}
+          <div style={{ flex: 1 }}>
+            <Title level={4}>Сотрудник</Title>
+
+            <Select
+              style={{ width: "100%", marginBottom: "20px" }}
+              placeholder="Выберите сотрудника"
+              onChange={onEmployeeChange}
+            >
+              {employees.map((employee) => (
+                <Option key={employee.id} value={employee.id}>
+                  {employee.full_name}
+                </Option>
+              ))}
+            </Select>
+
+            {report && (
+              <div style={{ flex: 1 }}>
+                <Text>{report.tarot_reading}</Text>
+              </div>
+            )}
+          </div>
+        </Content>
+
+        {/* Trigger Button */}
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={onDoMatch}
+            disabled={selectedEmployee === null}
+          >
+            🔮 Оценить
+          </Button>
+        </div>
+      </Layout>
+    </>
   );
 };
 
