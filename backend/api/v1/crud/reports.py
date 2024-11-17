@@ -1,9 +1,34 @@
+from os import getenv
+
+from ollama import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from api.v1.crud.candidates import get_candidate
 from api.v1.models import Report, Employee
 from api.v1.schemas.reports import ReportCreate, ReportUpdate
+from core.config import settings
+
+client = AsyncClient(host=settings.llm_settings.ollama_url)
+
+
+async def get_report_for_candidate_employee(
+    candidate_name,
+    candidate_birth_date,
+    candidate_birth_time,
+    employee_name,
+    employee_birth_date,
+    employee_birth_time,
+):
+    message = {
+        "role": "user",
+        "content": "Сделай отчет по совместимости на основе Таро и космологии для"
+        f"{candidate_name}, родился {candidate_birth_date} в {candidate_birth_time} и"
+        f"{employee_name}, родился {employee_birth_date} в {employee_birth_time}",
+    }
+    response = await client.chat(model="llama3.2:1b", messages=[message])
+    return response["message"]["content"]
 
 
 async def get_report_by_candidate_and_employee(
@@ -44,9 +69,23 @@ async def create_report(session: AsyncSession, report_in: ReportCreate) -> Repor
     if len(employees) != len(report_in.employees_ids):
         raise ValueError("Some employees not found")
 
+    candidate = await get_candidate(session, report_in.candidate_id)
+
+    if not candidate:
+        raise ValueError("Department not found")
+
+    tarot_reading = await get_report_for_candidate_employee(
+        candidate.full_name,
+        candidate.birth_date,
+        candidate.birth_time,
+        employees[0].full_name,
+        employees[0].birth_date,
+        employees[0].birth_time,
+    )
+
     report = Report(
         compatibility_score=report_in.compatibility_score,
-        tarot_reading=report_in.tarot_reading,
+        tarot_reading=tarot_reading,
         candidate_id=report_in.candidate_id,
         employees=list(employees),
     )
