@@ -13,7 +13,7 @@ class EmployeeBase(BaseModel):
     soft_skills: str | None
     bio: str | None
     position: Annotated[str, MinLen(1), MaxLen(128)]
-    department: Annotated[str, MinLen(1), MaxLen(128)]
+    department_id: int
     hire_date: date
 
 
@@ -28,6 +28,8 @@ class EmployeeUpdate(EmployeeBase):
     hard_skills: str | None = None
     soft_skills: str | None = None
     bio: str | None = None
+    position: Annotated[str, MinLen(1), MaxLen(128)] | None = None
+    department_id: int | None = None
 
 
 class Employee(EmployeeBase):

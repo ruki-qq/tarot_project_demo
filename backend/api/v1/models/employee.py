@@ -10,6 +10,7 @@ from .candidate import Candidate
 
 if TYPE_CHECKING:
     from .report import Report
+    from .department import Department
 
 
 class Employee(Candidate):
@@ -19,7 +20,8 @@ class Employee(Candidate):
     )
 
     position: Mapped[str] = mapped_column(String(128))
-    department: Mapped[str] = mapped_column(String(128))
+    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))
+    department: Mapped["Department"] = relationship(back_populates="employees")
     hire_date: Mapped[date] = mapped_column(Date)
 
     reports: Mapped[list["Report"]] = relationship(

@@ -36,7 +36,7 @@ async def get_employee(
     response_model=Employee,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_product(
+async def create_employee(
     employee_in: EmployeeCreate,
     session: Annotated[
         "AsyncSession",
