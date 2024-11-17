@@ -4,6 +4,8 @@ from typing import Annotated
 from annotated_types import MinLen, MaxLen
 from pydantic import BaseModel, ConfigDict, PositiveInt
 
+from api.v1.schemas.departments import Department
+
 
 class EmployeeBase(BaseModel):
     full_name: Annotated[str, MinLen(1), MaxLen(256)]
@@ -30,10 +32,12 @@ class EmployeeUpdate(EmployeeBase):
     bio: str | None = None
     position: Annotated[str, MinLen(1), MaxLen(128)] | None = None
     department_id: int | None = None
+    hire_date: date | None = None
 
 
 class Employee(EmployeeBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: PositiveInt
+    department: Department
     is_favoured: bool

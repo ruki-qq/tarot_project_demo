@@ -1,5 +1,6 @@
 __all__ = (
     "Candidate",
+    "Department",
     "Employee",
     "Report",
 )
