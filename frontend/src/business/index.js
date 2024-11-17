@@ -3,11 +3,17 @@ export const searchCandidate = (candidates, search) => {
 
   return candidates.filter((candidate) => {
     return (
-      candidate.name.toLowerCase().replaceAll(" ", "").includes(text) ||
-      candidate.jobTitle.toLowerCase().replaceAll(" ", "").includes(text) ||
-      candidate.skills
-        .map((x) => x.toLowerCase())
-        .join("")
+      candidate.full_name.toLowerCase().replaceAll(" ", "").includes(text) ||
+      candidate.bio.toLowerCase().replaceAll(" ", "").includes(text) ||
+      candidate.hard_skills
+        .toLowerCase()
+        .replaceAll(" ", "")
+        .replaceAll(",", "")
+        .includes(text) ||
+      candidate.soft_skills
+        .toLowerCase()
+        .replaceAll(" ", "")
+        .replaceAll(",", "")
         .includes(text)
     );
   });
