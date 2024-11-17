@@ -6,6 +6,21 @@ from api.v1.models import Report, Employee
 from api.v1.schemas.reports import ReportCreate, ReportUpdate
 
 
+async def get_report_by_candidate_and_employee(
+    session: AsyncSession, candidate_id: int, employee_id: int
+) -> list[Report]:
+    stmt = (
+        select(Report)
+        .where(Report.candidate_id == candidate_id)
+        .join(Report.employees)
+        .where(Employee.id == employee_id)
+        .options(selectinload(Report.candidate), selectinload(Report.employees))
+    )
+
+    result = await session.execute(stmt)
+    return list(result.scalars().all())
+
+
 async def get_reports(session: AsyncSession) -> list[Report]:
     stmt = select(Report).order_by(Report.id).options(selectinload(Report.employees))
     result = await session.execute(stmt)

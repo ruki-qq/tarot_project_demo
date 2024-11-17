@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.v1.crud import reports as crud_reports
@@ -19,6 +19,31 @@ async def get_reports(
     ],
 ):
     return await crud_reports.get_reports(session)
+
+
+@router.get(
+    "/candidate/{candidate_id}/employee/{employee_id}", response_model=list[Report]
+)
+async def get_reports_by_candidate_and_employee(
+    candidate_id: int,
+    employee_id: int,
+    session: Annotated["AsyncSession", Depends(db_helper.scoped_session_dependency)],
+):
+    """
+    Get all reports that involve both the specified candidate and employee.
+    Returns a list of reports since there might be multiple reports for the same candidate-employee pair.
+    """
+    reports = await crud_reports.get_report_by_candidate_and_employee(
+        session, candidate_id=candidate_id, employee_id=employee_id
+    )
+
+    if not reports:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No reports found for candidate {candidate_id} and employee {employee_id}",
+        )
+
+    return reports
 
 
 @router.get("/{report_id}")
