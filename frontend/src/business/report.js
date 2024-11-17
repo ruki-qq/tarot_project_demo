@@ -52,7 +52,6 @@ export const getReport = async ({ candidate, employee }) => {
 export const createReport = async ({ candidate, employee }) => {
   const response = await $api.post(`${API_URL}/reports`, {
     compatibility_score: Math.random(),
-    tarot_reading: loremIpsum({ count: 30, units: "words" }),
     candidate_id: candidate.id,
     employees_ids: [employee.id],
   });
