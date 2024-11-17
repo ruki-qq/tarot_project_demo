@@ -9,7 +9,6 @@ from api.v1.schemas.employees import Employee
 
 class ReportBase(BaseModel):
     compatibility_score: float
-    tarot_reading: str
     candidate_id: int
 
 
@@ -28,4 +27,5 @@ class Report(ReportBase):
 
     id: int
     created_at: datetime
+    tarot_reading: str
     employees: list[Employee]
