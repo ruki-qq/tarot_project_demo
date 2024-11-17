@@ -16,6 +16,7 @@ pydantic = {extras = ["email"], version = "^2.9.2"}
 sqladmin = "^0.20.1"
 fastapi-users = {extras = ["sqlalchemy"], version = "^14.0.0"}
 faker = "^33.0.0"
+ollama = "^0.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

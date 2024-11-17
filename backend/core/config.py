@@ -13,6 +13,15 @@ class AccessTokenSettings(BaseSettings):
     verification_token_secret: str
 
 
+class LLMSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
+    ollama_url: str = "localhost:11434"
+
+
 class EnvVars(BaseModel):
     db_user: str
     db_pass: str
@@ -43,6 +52,7 @@ class Settings(DBSettings):
     auth_prefix: str = "/auth"
     users_prefix: str = "/users"
     access_token_settings: AccessTokenSettings = AccessTokenSettings()
+    llm_settings: LLMSettings = LLMSettings()
 
 
 settings = Settings()
