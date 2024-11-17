@@ -38,6 +38,7 @@ async def create_employee(
     employee = Employee(**employee_in.model_dump())
     session.add(employee)
     await session.commit()
+    employee = await get_employee(session, employee.id)
     return employee
 
 
@@ -53,6 +54,10 @@ async def update_employee(
     for name, value in employee_update.model_dump(exclude_unset=True).items():
         setattr(employee, name, value)
     await session.commit()
+
+    # department field not updating in response
+    employee = await get_employee(session, employee.id)
+
     return employee
 
 

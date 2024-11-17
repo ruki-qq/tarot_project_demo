@@ -6,6 +6,7 @@ from api.v1.users import router as users_router
 from api.v1.candidates import router as candidates_router
 from api.v1.employees import router as employees_router
 from api.v1.reports import router as reports_router
+from api.v1.departments import router as departments_router
 
 http_bearer = HTTPBearer(auto_error=False)
 
@@ -15,3 +16,4 @@ router_v1.include_router(users_router)
 router_v1.include_router(candidates_router)
 router_v1.include_router(employees_router)
 router_v1.include_router(reports_router)
+router_v1.include_router(departments_router)

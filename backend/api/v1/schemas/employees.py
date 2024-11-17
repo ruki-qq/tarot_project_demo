@@ -32,6 +32,7 @@ class EmployeeUpdate(EmployeeBase):
     bio: str | None = None
     position: Annotated[str, MinLen(1), MaxLen(128)] | None = None
     department_id: int | None = None
+    hire_date: date | None = None
 
 
 class Employee(EmployeeBase):
