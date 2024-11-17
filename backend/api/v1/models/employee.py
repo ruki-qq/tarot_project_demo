@@ -21,7 +21,9 @@ class Employee(Candidate):
 
     position: Mapped[str] = mapped_column(String(128))
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))
-    department: Mapped["Department"] = relationship(back_populates="employees")
+    department: Mapped["Department"] = relationship(
+        back_populates="employees", lazy="selectin"
+    )
     hire_date: Mapped[date] = mapped_column(Date)
 
     reports: Mapped[list["Report"]] = relationship(
