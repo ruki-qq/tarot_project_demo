@@ -43,9 +43,9 @@ export const createCandidate = async (candidate) => {
     hard_skills,
     soft_skills,
     bio,
-    position,
-    department,
   } = candidate;
+
+  console.log({ candidate})
 
   const response = await $api.post(`${API_URL}/candidates`, {
     full_name,
@@ -54,8 +54,6 @@ export const createCandidate = async (candidate) => {
     hard_skills,
     soft_skills,
     bio,
-    position,
-    department,
   });
 
   const data = response.data;

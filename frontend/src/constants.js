@@ -12,6 +12,7 @@ import { EmployeeMatchingPage } from "./pages/EmployeeMatchingPage";
 import { CandidateMatchingPage } from "./pages/CandidateMatchingPage";
 import { NewCandidatePage } from "./pages/NewCandidatePage";
 import { Register } from "./pages/RegisterPage";
+import { NewEmployeePage } from "./pages/NewEmployeePage";
 
 export { API_URL } from "./api";
 
@@ -62,6 +63,10 @@ export const routes = {
     {
       path: "/candidates/new",
       element: <NewCandidatePage />,
+    },
+    {
+      path: "/employees/new",
+      element: <NewEmployeePage />,
     },
     {
       path: "/candidates",

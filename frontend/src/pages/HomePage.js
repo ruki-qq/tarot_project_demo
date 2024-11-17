@@ -54,7 +54,7 @@ export const HomePage = () => {
               cursor: "pointer",
             }}
           >
-            {item.icon}
+            <div>{item.icon}</div>
             <Text style={{ marginTop: "10px", fontSize: "14px" }}>
               {item.title}
             </Text>

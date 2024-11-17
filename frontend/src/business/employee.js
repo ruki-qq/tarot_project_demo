@@ -40,7 +40,19 @@ export const getEmployee = async (id) => {
   return data;
 };
 
-//
+// {
+//     "full_name": "string",
+//     "birth_date": "2024-11-17",
+//     "birth_time": "06:34:05",
+//     "hard_skills": "string",
+//     "soft_skills": "string",
+//     "bio": "string",
+//     "position": "string",
+//     "department_id": 0,
+//     "hire_date": "2024-11-17",
+//     "id": 1,
+//     "is_favoured": true
+// }
 export const createEmployee = async ({
   full_name,
   birth_date,
@@ -49,7 +61,8 @@ export const createEmployee = async ({
   soft_skills,
   bio,
   position,
-  department,
+  department_id,
+  hire_date,
 }) => {
   const response = await $api.post(`${API_URL}/employees`, {
     full_name,
@@ -59,7 +72,8 @@ export const createEmployee = async ({
     soft_skills,
     bio,
     position,
-    department,
+    department_id,
+    hire_date,
   });
 
   const data = response.data;

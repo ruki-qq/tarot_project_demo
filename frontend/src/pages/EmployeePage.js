@@ -92,6 +92,10 @@ export const EmployeePage = () => {
               Время рождения: {employee.birth_time}
             </div>
           )}
+
+          <div style={{ marginTop: "15px" }}>
+            Дата найма: {employee.hire_date}
+          </div>
         </Space>
         <Divider />
 
