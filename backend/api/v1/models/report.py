@@ -11,6 +11,7 @@ from .report_employee_association import report_employee_association_table
 
 if TYPE_CHECKING:
     from .employee import Employee
+    from .candidate import Candidate
     from datetime import datetime
 
 
@@ -23,6 +24,8 @@ class Report(IdIntMixin, Base):
     )
 
     candidate_id: Mapped[int] = mapped_column(ForeignKey("candidates.id"))
+
+    candidate: Mapped["Candidate"] = relationship(back_populates="reports")
 
     employees: Mapped[list["Employee"]] = relationship(
         secondary=report_employee_association_table,

@@ -5,5 +5,6 @@ __all__ = (
 )
 
 from .candidate import Candidate
+from .department import Department
 from .employee import Employee
 from .report import Report

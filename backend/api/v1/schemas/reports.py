@@ -4,23 +4,23 @@ from typing import Annotated
 from annotated_types import MinLen, MaxLen
 from pydantic import BaseModel, ConfigDict, PositiveInt
 
-from api.v1.models import Employee
-from api.v1.schemas.candidates import Candidate
+from api.v1.schemas.employees import Employee
 
 
 class ReportBase(BaseModel):
     compatibility_score: float
     tarot_reading: str
+    candidate_id: int
 
 
 class ReportCreate(ReportBase):
-    candidate_id: int
-    employee_ids: list[int]
+    employees_ids: list[int]
 
 
 class ReportUpdate(ReportBase):
     compatibility_score: float | None = None
     tarot_reading: str | None = None
+    candidate_id: None = None
 
 
 class Report(ReportBase):
@@ -28,5 +28,4 @@ class Report(ReportBase):
 
     id: int
     created_at: datetime
-    candidates: list[Candidate]
     employees: list[Employee]
